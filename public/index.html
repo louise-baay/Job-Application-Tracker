@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Job Application Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <h1>Job Application Tracker</h1>
+
+  <section class="panel">
+    <h2>Create Application</h2>
+    <form id="createForm">
+      <label>Company</label>
+      <input name="companyName" required />
+
+      <label>Role Title</label>
+      <input name="roleTitle" required />
+
+      <label>Job URL</label>
+      <input name="jobUrl" placeholder="https://..." />
+
+      <label>Notes</label>
+      <textarea name="notes" rows="3"></textarea>
+
+      <label>Date Applied</label>
+      <input name="dateApplied" type="date" />
+
+      <label>Salary Min</label>
+      <input name="salaryMin" type="number" />
+
+      <label>Salary Max</label>
+      <input name="salaryMax" type="number" />
+
+      <button type="submit">Create</button>
+    </form>
+    <div id="createMsg" class="msg"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Search / Filter</h2>
+    <div class="row">
+      <input id="search" placeholder="Search company or role..." />
+      <select id="status">
+        <option value="">All statuses</option>
+        <option>Interested</option>
+        <option>Applied</option>
+        <option>Waiting</option>
+        <option>Interviewing</option>
+        <option>Interviewed</option>
+        <option>Offer</option>
+        <option>Accepted</option>
+        <option>Rejected</option>
+        <option>Withdrawn</option>
+      </select>
+      <select id="sortBy">
+        <option value="">Sort: last updated</option>
+        <option value="applied">Sort: date applied</option>
+        <option value="created">Sort: created</option>
+      </select>
+      <button id="refreshBtn" type="button">Refresh</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Pipeline Report</h2>
+    <button id="reportBtn" type="button">Load report</button>
+    <pre id="reportOut"></pre>
+  </section>
+
+  <section class="panel">
+    <h2>Applications</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Date Applied</th>
+          <th>Updated</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="appsTbody"></tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>Selected Application</h2>
+    <div id="selected"></div>
+  </section>
+
+  <script src="./app.js"></script>
+</body>
+</html>
