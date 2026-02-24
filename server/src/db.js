@@ -12,7 +12,7 @@ async function test(){
   const res = await pool.query(`
     INSERT INTO applications
     (company_name, role_title, current_status)
-    VALUES ('Google', 'SWE Intern', 'Interested')
+    VALUES ('Cool Company', 'SWE Intern', 'Interested')
     RETURNING *;`);
 
     console.log("Inserted row: ", res.rows[0]);
