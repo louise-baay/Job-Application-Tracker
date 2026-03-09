@@ -4,7 +4,7 @@ dotenv.config();
 
 const { Pool } = pg;
 
-export const pool = new Pool({
+/*export const pool = new Pool({
   connectionString: "postgresql://neondb_owner:npg_Mn19NiXcHUdt@ep-aged-shape-aip1p8be-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
   ssl: {rejectUnauthorized: false}
 });
@@ -27,4 +27,11 @@ async function test(){
   await pool.end();
 }
 
-test().catch(console.error);
+test().catch(console.error);*/
+
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
