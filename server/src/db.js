@@ -1,5 +1,5 @@
 import pg from "pg";
-import dotenv from "dotenv";//just makes it look cleaner, prob will remove later and just use the database string here.
+import dotenv from "dotenv";
 dotenv.config();
 
 const { Pool } = pg;
