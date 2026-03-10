@@ -101,4 +101,46 @@ export class ApplicationRepository {
         const { rows } = await pool.query(query, values);
         return rows[0] ?? null;
     }
+
+    async updateStatusAndInterviewFields(id, fields){
+        const query = `
+        UPDATE applications
+        SET current_status = COALESCE($2, current_status),
+            interview_start = COALESCE($3, interview_start),
+            interview_end = COALESCE($4, interview_end),
+            calendar_event_id = COALESCE($5, calendar_event_id),
+            updated_at = NOW()
+        WHERE id = $1
+        RETURNING *;
+        `;
+
+        const values = [
+            id,
+            fields.currentStatus ?? null,
+            fields.interviewStart ?? null,
+            fields.interviewEnd ?? null,
+            fields.calendarEventId ?? null
+        ];
+
+        const { rows } = await pool.query(query, values);
+        return rows[0] ?? null;
+    }
+
+    async delete(id) {
+        const { rows } = await pool.query(
+            `DELETE FROM applications WHERE id = $1 RETURNING *`,
+            [id]
+        );
+        return rows[0] ?? null;
+    }
+
+    async pipelineReport(){
+        const { rows } = await pool.query(
+            `SELECT current_status, COUNT(*)::int AS count
+            FROM applications
+            GROUP BY current_status
+            ORDER BY current_status;`
+        );
+        return rows;
+    }
 }
