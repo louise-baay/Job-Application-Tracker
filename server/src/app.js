@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 
 dotenv.config();
 const app = express();
-
 app.use(express.json());
 
 const __filename = fileURLToPath(import.meta.url);
