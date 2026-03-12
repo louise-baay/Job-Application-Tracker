@@ -1,9 +1,8 @@
-import { ApplicationRepository } from "../repositories/ApplicationRepository";
-import { StatusHistoryRepository } from "../repositories/StatusHistoryRepository";
-import { AuditLogRepositry } from "../repositories/AuditLogRepository";
-import { ApplicationRepository } from "../repositories/ApplicationRepository";
-import { ApplicationFactory } from "../factory/ApplicationFactory";
-import { stateFromStatus } from "../state/state";
+import { ApplicationRepository } from "../repositories/ApplicationRepository.js";
+import { StatusHistoryRepository } from "../repositories/StatusHistoryRepository.js";
+import { AuditLogRepositry } from "../repositories/AuditLogRepository.js";
+import { ApplicationFactory } from "../factory/ApplicationFactory.js";
+import { stateFromStatus } from "../state/state.js";
 
 
 /**

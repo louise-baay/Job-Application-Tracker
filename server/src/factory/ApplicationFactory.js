@@ -1,5 +1,5 @@
-import { normalizeUrl } from "../util/normalize";
-import { requireNonEmpty, validateSalary } from "../util/validate";
+import { normalizeUrl } from "../util/normalize.js";
+import { requireNonEmpty, validateSalary } from "../util/validate.js";
 
 /**
  * Design Pattern: Factory

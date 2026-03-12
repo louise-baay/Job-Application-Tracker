@@ -1,4 +1,4 @@
-import { ApplicationState } from "./ApplicationState";
+import { ApplicationState } from "./ApplicationState.js";
 
 /**
  * Intereted

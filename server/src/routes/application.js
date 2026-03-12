@@ -1,5 +1,5 @@
 import express from "express";
-import { ApplicationFacade } from "../facade/ApplicationFacade";
+import { ApplicationFacade } from "../facade/ApplicationFacade.js";
 
 export const applicationsRouter = express.Router();
 const facade = new ApplicationFacade();

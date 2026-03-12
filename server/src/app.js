@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import { applicationsRouter } from "./routes/application.js";
+
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -14,9 +16,10 @@ const __dirname = path.dirname(__filename);
 app.use("/", express.static(path.join(__dirname, "../../public")));
  
 // API routes
-//app.use("/api/applications", applicationsRouter);
+app.use("/api/applications", applicationsRouter);
 
 const port = Number(process.env.PORT || 3000);
 app.listen(port, () => {
   console.log(`Job Tracker running at http://localhost:${port}`);
 });
+
