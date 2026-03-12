@@ -2,12 +2,18 @@ import { pool } from "../db.js";
 
 export class StatusHistoryRepository {
     async add({ applicationId, fromStatus, toStatus, note}){
-        const { rows } = await pool.query(`
-            INSERT INTO status_history (applicaation_id, from_status, to_status, note)
-            VALUES ($1, $2, $3, $5)
-            RETURNING *;`, [applicationId, fromStatus ?? null, toStatus, note ?? null]);
+        try{
+            const { rows } = await pool.query(`
+                INSERT INTO status_history (application_id, from_status, to_status, note)
+                VALUES ($1, $2, $3, $4)
+                RETURNING *;`, [applicationId, fromStatus ?? null, toStatus, note ?? null]);
 
-        return rows[0];
+            console.log("STATUS_HISTORY RESULT: ", rows[0]);
+            return rows[0];
+        } catch (err) {
+            console.error("STATUS_HISTORY ERROR: ", err.message);
+            throw err;
+        }
     }
 
     async listForApplication(applicaation_id) {

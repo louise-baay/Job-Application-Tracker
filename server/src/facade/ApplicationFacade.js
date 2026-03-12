@@ -40,16 +40,22 @@ export class ApplicationFacade {
         const created = await this.apps.create(app);
 
         console.log("step 3: ", dto);
-        await this.history.add({
-            applicationId: created.id,
-            fromStatus: null,
-            toStatus: created.current_status,
-            note: "Initial status"
-        });
 
-        console.log("step 4: ", dto);
+        try{
+            await this.history.add({
+                applicationId: created.id,
+                fromStatus: null,
+                toStatus: created.current_status,
+                note: "Initial status"
+            });
+            console.log("step 4: ", dto);
+        } catch (err) {
+            console.error("step 4 error: ", err.message);
+            throw err;
+        }
 
-        await this.audit.add({
+        try {
+            await this.audit.add({
             entityType: "application",
             entityId: created.id,
             action: "CREATE",
@@ -58,9 +64,12 @@ export class ApplicationFacade {
                 role: created.role_title
             }
         });
-
-        console.log("step 5: ", dto);
-
+            console.log("step 5: ", dto);
+        } catch (err) {
+            console.error("step 5 error: ", err.message);
+            throw err;
+        }
+        
         return created;
     }
 
