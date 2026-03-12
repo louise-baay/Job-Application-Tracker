@@ -121,4 +121,8 @@ export class ApplicationFacade {
 
         return updated;
     }
+
+    async pipelineReport(){
+        return this.apps.pipelineReport();
+    }
 }
