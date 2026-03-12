@@ -1,6 +1,6 @@
 export function requireNonEmpty(fieldName, value){
     if(!value || !String(value).trim()){
-        throw new Error(`${fieldname} is required!`);
+        throw new Error(`${fieldName} is required!`);
     }
 }
 
