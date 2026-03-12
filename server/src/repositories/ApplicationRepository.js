@@ -26,6 +26,8 @@ export class ApplicationRepository {
             app.interviewEnd,
             app.calendarEventId
         ];
+
+        console.log("Insert values: ", values);
         
         const { rows } = await pool.query(query, values);
         return rows[0];

@@ -1,6 +1,6 @@
 import { ApplicationRepository } from "../repositories/ApplicationRepository.js";
 import { StatusHistoryRepository } from "../repositories/StatusHistoryRepository.js";
-import { AuditLogRepositry } from "../repositories/AuditLogRepository.js";
+import { AuditLogRepository } from "../repositories/AuditLogRepository.js";
 import { ApplicationFactory } from "../factory/ApplicationFactory.js";
 import { stateFromStatus } from "../state/state.js";
 
@@ -17,7 +17,7 @@ export class ApplicationFacade {
     constructor() {
         this.apps = new ApplicationRepository();
         this.history = new StatusHistoryRepository();
-        this.audit = new AuditLogRepositry();
+        this.audit = new AuditLogRepository();
         this.factory = new ApplicationFactory();
     }
     
@@ -96,7 +96,7 @@ export class ApplicationFacade {
         const currentState = stateFromStatus(app.current_status);
 
         if(!currentState.canTransitionTo(nextStatus)){
-            throw new error(`Invalid transition: ${app.current_status} -> ${nextStatus}`);
+            throw new Error(`Invalid transition: ${app.current_status} -> ${nextStatus}`);
         }
 
         const updated = await this.apps.updateStatusAndInterviewFields(id, {currentStatus: nextStatus });
