@@ -34,7 +34,7 @@ export class ApplicationFacade {
      */
 
     async createApplication(dto){
-        const app = new this.factory.create(dto);
+        const app = this.factory.create(dto);
         const created = await this.apps.create(app);
 
         await this.history.add({
