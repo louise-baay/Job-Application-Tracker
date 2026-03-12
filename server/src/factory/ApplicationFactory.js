@@ -11,6 +11,9 @@ import { requireNonEmpty, validateSalary } from "../util/validate.js";
 
 export class ApplicationFactory{
     create(dto){
+
+        console.log("Factory dto: ", dto);
+
         requireNonEmpty("companyName", dto.companyName);
         requireNonEmpty("roleTitle", dto.roleTitle);
         validateSalary(dto.salaryMin ?? null, dto.salaryMax ?? null);
@@ -19,7 +22,7 @@ export class ApplicationFactory{
 
         return{
             companyName: String(dto.companyName).trim(),
-            roleTitle: Strin(dto.roleTitle).trim(),
+            roleTitle: String(dto.roleTitle).trim(),
             jobUrl: normalizeUrl(dto.jobUrl),
             notes: dto.notes ? String(dto.notes) : null,
             salaryMin: dto.salaryMin != null ? Number(dto.salaryMin) : null,

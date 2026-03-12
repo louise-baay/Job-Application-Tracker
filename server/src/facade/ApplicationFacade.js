@@ -34,15 +34,20 @@ export class ApplicationFacade {
      */
 
     async createApplication(dto){
+        console.log("step 1: ", dto);
         const app = this.factory.create(dto);
+        console.log("step 2: ", dto);
         const created = await this.apps.create(app);
 
+        console.log("step 3: ", dto);
         await this.history.add({
             applicationId: created.id,
             fromStatus: null,
             toStatus: created.current_status,
             note: "Initial status"
         });
+
+        console.log("step 4: ", dto);
 
         await this.audit.add({
             entityType: "application",
@@ -53,6 +58,8 @@ export class ApplicationFacade {
                 role: created.role_title
             }
         });
+
+        console.log("step 5: ", dto);
 
         return created;
     }
