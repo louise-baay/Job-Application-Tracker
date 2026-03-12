@@ -18,18 +18,28 @@ createForm.addEventListener("submit", async (e) => {
         salaryMax: form.get("salaryMax") || null
     };
 
-    const res = await fetch("/api/applications", {
-        method: "POST",
-        headers: { "Content-Type": "appliactions/json" },
-        body: JSON.stringify(body)
+    console.log("Sending the body: ", body);
+
+    try{
+        const res = await fetch("/api/applications", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
     });
 
     const data = await res.json();
 
-    if(res.ok) {
+    if(!res.ok) {
         createMsg.textContent = "Job Application Created Successfully.";
-        console.log(data);
-    } else {
-        createMsg.textContent = data.error || "Create failed.";
+        return;
+    }
+    createMsg.textContent = data.error || "Create failed.";
+    console.log("Created: ", data);
+
+    } catch (err) {
+        console.error(err);
+        createMsg.textContent = err.message;
     }
 });

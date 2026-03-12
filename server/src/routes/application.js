@@ -43,7 +43,10 @@ applicationsRouter.get("/:id", async (req, res) => {
 
 applicationsRouter.post("/", async (req, res) => {
     try {
+        console.log("POST information req.body: ", req.body);
         const created = await facade.createApplication(req.body);
+
+        console.log("created: ", created);
         res.status(201).json(created);//successfull post
     } catch (e) {
         res.status(500).json({ error: e.message });
