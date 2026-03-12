@@ -1,6 +1,8 @@
 const createForm = document.getElementById("createForm");
 const createMsg = document.getElementById("createMsg");
 
+console.log("Frontend JS loaded");//making sure that it's running
+
 createForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
