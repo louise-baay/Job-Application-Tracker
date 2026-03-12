@@ -66,7 +66,7 @@ export class ApplicationRepository {
 
         const { rows } = await pool.query(`
             SELECT * FROM applications
-            ${WHERE}
+            ${where}
             ORDER BY ${orderBy};`, values);
 
         return rows;

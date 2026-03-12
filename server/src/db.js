@@ -30,8 +30,5 @@ async function test(){
 test().catch(console.error);*/
 
 export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  connectionString: "postgresql://neondb_owner:npg_Mn19NiXcHUdt@ep-aged-shape-aip1p8be-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 });
