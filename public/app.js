@@ -59,10 +59,10 @@ async function loadApplications(){
             const tr = document.createElement("tr");
 
             tr.innerHTML = `
-            <td>${app.companyName}</td>
-            <td>${app.roleTitle}</td>
+            <td>${app.company_name}</td>
+            <td>${app.role_title}</td>
             <td>${app.current_status}</td>
-            <td>${app.dateApplied}</td>
+            <td>${app.date_applied}</td>
             <td>${app.updated_at}</td>
             <td><button data-id="${app.id}">View</button></td>
             `;
