@@ -140,4 +140,13 @@ export class ApplicationFacade {
     async pipelineReport(){
         return this.apps.pipelineReport();
     }
+
+    async getApplicationDetails(id) {
+        const app = await this.apps.getById(id);
+        if (!app) return null;
+
+        const history = await this.history.listForApplication(id);
+        return { app, history };
+    }
 }
+

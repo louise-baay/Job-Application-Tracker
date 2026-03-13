@@ -1,5 +1,6 @@
 const createForm = document.getElementById("createForm");
 const createMsg = document.getElementById("createMsg");
+const tbody = document.getElementById("appsTbody");
 
 console.log("Frontend JS loaded");//making sure that it's running
 
@@ -33,6 +34,9 @@ createForm.addEventListener("submit", async (e) => {
 
     if(!res.ok) {
         createMsg.textContent = "Job Application Created Successfully.";
+
+        createForm.reset();
+        await loadApplications();
         return;
     }
     createMsg.textContent = data.error || "Create failed.";
@@ -43,3 +47,31 @@ createForm.addEventListener("submit", async (e) => {
         createMsg.textContent = err.message;
     }
 });
+
+async function loadApplications(){
+    try{
+        const res = await fetch("/api/applications");
+        const apps = await res.json();
+
+        tbody.innerHTML = "";
+
+        for (const app of apps){
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+            <td>${app.companyName}</td>
+            <td>${app.roleTitle}</td>
+            <td>${app.current_status}</td>
+            <td>${app.dateApplied}</td>
+            <td>${app.updated_at}</td>
+            <td><button data-id="${app.id}">View</button></td>
+            `;
+
+            tbody.appendChild(tr);
+        }
+    } catch (err) {
+        console.error("Failed to load applications: ", err);
+    }
+}
+
+loadApplications();

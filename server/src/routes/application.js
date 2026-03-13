@@ -8,7 +8,7 @@ applicationsRouter.get("/", async (req, res) => {
     try {
         const apps = await facade.listApplication({
             status: req.query.status || null,
-            status: req.query.search || null,
+            search: req.query.search || null,
             sortBy: req.query.sortBy || null
         });
         
