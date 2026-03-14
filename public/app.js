@@ -39,7 +39,8 @@ createForm.addEventListener("submit", async (e) => {
         await loadApplications();
         return;
     }
-    createMsg.textContent = data.error || "Create failed.";
+
+    //createMsg.textContent = data.error || "Create failed.";
     console.log("Created: ", data);
 
     } catch (err) {
