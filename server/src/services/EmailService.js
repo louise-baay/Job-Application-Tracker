@@ -11,18 +11,14 @@ export class EmailService {
             to: "demonhiatus@gmail.com",
             from: "baaylouise@gmail.com",
             subject: `Interview is scheduled - ${details.companyName}`,
-            text:`Interview Scheduled for ${details.companyName}
-                Role: ${details.roleTitle}
-                Start: ${details.interviewStart}
-                End: ${details.interviewEnd}
-                Notes: ${details.notes ?? ""}`,
-            html: `
+            text:`Interview Scheduled for ${details.companyName} \n Role: ${details.roleTitle} \n Start: ${details.start} \n End: ${details.end} \n Notes: ${details.notes ?? ""}`,
+            /*html: `
                 <h2>Interview Scheduled</h2>
                 <p><Company: ${details.companyName}</p>
                 <p><Role: ${details.roleTile}</p>
                 <p><Start: ${details.interviewStart}</p>
                 <p><End: ${details.interviewEnd}</p>
-                <p><Notes: ${details.notes ?? ""}</p>`
+                <p><Notes: ${details.notes ?? ""}</p>`*/
         };
 
         try{
