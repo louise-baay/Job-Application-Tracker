@@ -2,7 +2,7 @@ import sgMail from "@sendgrid/mail";
 
 export class EmailService {
     constructor(){
-        sgMail.setApiKey(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);
+        sgMail.setApiKey("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");
     }
 
     async sendInterviewScheduledEmail(details){
