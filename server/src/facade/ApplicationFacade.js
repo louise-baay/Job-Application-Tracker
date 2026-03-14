@@ -4,7 +4,6 @@ import { AuditLogRepository } from "../repositories/AuditLogRepository.js";
 import { ApplicationFactory } from "../factory/ApplicationFactory.js";
 import { stateFromStatus } from "../state/state.js";
 import { EmailService } from "../services/EmailService.js";
-import { calendar } from "googleapis/build/src/apis/calendar/index.js";
 
 
 /**
@@ -158,7 +157,7 @@ export class ApplicationFacade {
 
         const updated = await this.apps.updateStatusAndInterviewFields(id, {
             interviewStart: start,
-            interviewEnd, end,
+            interviewEnd: end,
             calendarEventId: null
         });
 
@@ -170,8 +169,8 @@ export class ApplicationFacade {
         });
 
         await this.email.sendInterviewScheduledEmail({
-            company_name: app.company_name,
-            role_title: app.role_title,
+            companyName: app.company_name,
+            roleTitle: app.role_title,
             notes: note ?? app.notes ?? "",
             start,
             end
@@ -186,7 +185,7 @@ export class ApplicationFacade {
 
         const updated = await this.apps.updateStatusAndInterviewFields(id, {
             interviewStart: null,
-            interviewEnd,
+            interviewEnd: null,
             calendarEventId: null
         });
 
