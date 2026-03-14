@@ -2,7 +2,15 @@ const createForm = document.getElementById("createForm");
 const createMsg = document.getElementById("createMsg");
 const tbody = document.getElementById("appsTbody");
 
+const searchInput = document.getElementById("search");
+const statusSelect = document.getElementById("status");
+const sortBySelect = document.getElementById("sortBy");
+const refreshBtn = document.getElementById("refreshBtn");
+
 console.log("Frontend JS loaded");//making sure that it's running
+
+refreshBtn.addEventListener("click", loadApplications);
+
 
 createForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -51,7 +59,19 @@ createForm.addEventListener("submit", async (e) => {
 
 async function loadApplications(){
     try{
-        const res = await fetch("/api/applications");
+        const params = new URLSearchParams();
+        const search = searchInput.value.trim();
+        const status = statusSelect.value;
+        const sortBy = sortBySelect.value;
+
+        if (search) params.set("search", search);
+        if (status) params.set("status", status);
+        if (sortBy) params.set("sortBy", sortBy);
+
+        const url = `api/applications?${params.toString()}`;
+        console.log("URL that we are getting is: ", url);
+
+        const res = await fetch(url);
         const apps = await res.json();
 
         tbody.innerHTML = "";
