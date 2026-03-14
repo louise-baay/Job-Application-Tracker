@@ -3,7 +3,8 @@ import { StatusHistoryRepository } from "../repositories/StatusHistoryRepository
 import { AuditLogRepository } from "../repositories/AuditLogRepository.js";
 import { ApplicationFactory } from "../factory/ApplicationFactory.js";
 import { stateFromStatus } from "../state/state.js";
-import { buildCalendarClient } from "../services/calendar/CalendarService.js";
+import { EmailService } from "../services/EmailService.js";
+import { calendar } from "googleapis/build/src/apis/calendar/index.js";
 
 
 /**
@@ -20,7 +21,7 @@ export class ApplicationFacade {
         this.history = new StatusHistoryRepository();
         this.audit = new AuditLogRepository();
         this.factory = new ApplicationFactory();
-        this.calendar = buildCalendarClient();
+        this.email = new EmailService();
     }
     
     /**
@@ -155,51 +156,37 @@ export class ApplicationFacade {
         const app = await this.apps.getById(id);
         if(!app) return null;
 
-        const details = {
-            companyName: app.company_name,
-            roleTitle: app.role_title,
-            notes: note ?? app.notes ?? "",
-            start,
-            end
-        };
-
-        let eventId = app.calendar_event_id;
-
-        if(eventId) {
-            const result = await this.calendar.updateInterviewEvent(eventId, details);
-            eventId = result.eventId ?? eventId;
-        } else {
-            const result = await this.calendar.createInterviewEvent(details);
-            eventId = result.eventId ?? null;
-        }
-
         const updated = await this.apps.updateStatusAndInterviewFields(id, {
             interviewStart: start,
-            interviewEnd: end,
-            calendarEventId: eventId
+            interviewEnd, end,
+            calendarEventId: null
         });
 
         await this.audit.add({
             entityType: "application",
             entityId: id,
             action: "SCHEDULE_INTERVIEW",
-            metadata: {start, end, calendarEventId: eventId }
+            metadata: { start, end }
         });
 
+        await this.email.sendInterviewScheduledEmail({
+            company_name: app.company_name,
+            role_title: app.role_title,
+            notes: note ?? app.notes ?? "",
+            start,
+            end
+        });
+        
         return updated;
     }
 
     async clearInterview(id) {
         const app = await this.apps.getById(id);
-        if (!app) return null;
-
-        if (app.calendar_event_id) {
-            await this.calendar.deleteInterviewEvent(app.calendar_event_id);
-        }
+        if(!app) return null;
 
         const updated = await this.apps.updateStatusAndInterviewFields(id, {
             interviewStart: null,
-            interviewEnd: null,
+            interviewEnd,
             calendarEventId: null
         });
 
@@ -207,7 +194,7 @@ export class ApplicationFacade {
             entityType: "application",
             entityId: id,
             action: "CLEAR_INTERVIEW",
-            metadata: { previousEventId: app.calendar_event_id }
+            metadata: {}
         });
 
         return updated;
