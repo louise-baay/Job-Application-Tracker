@@ -8,7 +8,7 @@ export class EmailService {
     async sendInterviewScheduledEmail(details){
         console.log("Email Service called with: ", details);
         const msg = {
-            to: "baaylouise@gmail.com",
+            to: "demonhiatus@gmail.com",
             from: "baaylouise@gmail.com",
             subject: `Interview is scheduled - ${details.companyName}`,
             text:`Interview Scheduled for ${details.companyName}

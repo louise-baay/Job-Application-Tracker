@@ -1,5 +1,4 @@
 
-
 const createForm = document.getElementById("createForm");
 const createMsg = document.getElementById("createMsg");
 const tbody = document.getElementById("appsTbody");
@@ -56,14 +55,13 @@ createForm.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if(!res.ok) {
-        createMsg.textContent = "Job Application Created Successfully.";
-
-        createForm.reset();
-        await loadApplications();
+        createMsg.textContent = data.error || "Create failed.";
         return;
     }
 
-    //createMsg.textContent = data.error || "Create failed.";
+    createMsg.textContent = "Job Application Created Successfully.";
+    createForm.reset();
+    await loadApplications();
     console.log("Created: ", data);
 
     } catch (err) {
@@ -83,7 +81,7 @@ async function loadApplications(){
         if (status) params.set("status", status);
         if (sortBy) params.set("sortBy", sortBy);
 
-        const url = `api/applications?${params.toString()}`;
+        const url = `/api/applications?${params.toString()}`;
         console.log("URL that we are getting is: ", url);
 
         const res = await fetch(url);
@@ -130,16 +128,16 @@ async function loadSelectedApplication(id){
         const app = data.app;
 
         selectedDiv.innerHTML = `
-        ${app.company_name}<br>
-        Role: ${app.role_title} <br>
-        Status: ${app.current_status} <br>
-        Applied: ${app.date_applied ?? ""} <br>
-        Notes: ${app.notes ?? ""}`;
+        <strong>Company:</strong>${app.company_name}<br>
+        <strong>Role:</strong> ${app.role_title} <br>
+        <strong>Status:</strong> ${app.current_status} <br>
+        <strong>Applied:</strong> ${app.date_applied ?? ""} <br>
+        <strong>Notes:</strong> ${app.notes ?? ""}`;
 
         interviewPanel.style.display = "block";//reveal interview panel
 
-        document.getElementById("interviewStart").value = app.interview_start ? toDateTimeLocal(app.interview_start) : "";
-        document.getElementById("interviewEnd").value = app.interview_end ? toDateTimeLocal(app.interview_end) : "";
+        document.getElementById("interviewStart").value = app.interview_start;
+        document.getElementById("interviewEnd").value = app.interview_end;
         document.getElementById("interviewNote").value = "";
     } catch (err) {
         console.error(err);
@@ -148,13 +146,12 @@ async function loadSelectedApplication(id){
 }
 
 scheduleInterviewBtn.addEventListener("click", async () => {
-    
-    console.log("Schedule Interview button clicked");
     if(!selectedApplicationId){
         interviewMsg.textContent = "Select an application first";
         return;
     }
-    await loadSelectedApplication(selectedApplicationId);
+    
+    await scheduleInterview(selectedApplicationId);
 });
 
 clearInterviewBtn.addEventListener("click", async () => {
@@ -212,7 +209,7 @@ async function scheduleInterview(id){
     await loadSelectedApplication(id);
 }
 
-function toDateTimeLocal(toISOString){
+function toDateTimeLocal(isoString){
     const date = new Date(isoString);
     const offsetMs = date.getTimezoneOffset() * 60000;
     const localDate = new Date(date.getTime() - offsetMs);
