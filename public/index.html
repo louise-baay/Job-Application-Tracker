@@ -10,6 +10,34 @@
   <h1>Job Application Tracker</h1>
 
 
+  <div class="search-row">
+  <section class="panel">
+    <h2>Search / Filter</h2>
+    <div class="row">
+      <input id="search" placeholder="Search company or role..." />
+      <select id="status">
+        <option value="">All statuses</option>
+        <option>Interested</option>
+        <option>Applied</option>
+        <option>Waiting</option>
+        <option>Interviewing</option>
+        <option>Interviewed</option>
+        <option>Offer</option>
+        <option>Accepted</option>
+        <option>Rejected</option>
+        <option>Withdrawn</option>
+      </select>
+      <select id="sortBy">
+        <option value="">Sort: last updated</option>
+        <option value="applied">Sort: date applied</option>
+        <option value="created">Sort: created</option>
+      </select>
+      <button id="refreshBtn" type="button">Refresh</button>
+    </div>
+  </section>
+  </div>
+
+
   <div class="layout">
   <section class="panel create-panel">
     <h2>Create Application</h2>
@@ -40,36 +68,13 @@
     <div id="createMsg" class="msg"></div>
   </section>
 
-  <section class="panel">
-    <h2>Search / Filter</h2>
-    <div class="row">
-      <input id="search" placeholder="Search company or role..." />
-      <select id="status">
-        <option value="">All statuses</option>
-        <option>Interested</option>
-        <option>Applied</option>
-        <option>Waiting</option>
-        <option>Interviewing</option>
-        <option>Interviewed</option>
-        <option>Offer</option>
-        <option>Accepted</option>
-        <option>Rejected</option>
-        <option>Withdrawn</option>
-      </select>
-      <select id="sortBy">
-        <option value="">Sort: last updated</option>
-        <option value="applied">Sort: date applied</option>
-        <option value="created">Sort: created</option>
-      </select>
-      <button id="refreshBtn" type="button">Refresh</button>
-    </div>
-  </section>
-
+  <!--
   <section class="panel">
     <h2>Pipeline Report</h2>
     <button id="reportBtn" type="button">Load report</button>
     <pre id="reportOut"></pre>
   </section>
+  -->
 
   <section class="panel list-panel">
     <h2>Applications</h2>
@@ -87,7 +92,6 @@
       <tbody id="appsTbody"></tbody>
     </table>
   </section>
-
   </div>
 
   <section class="panel">
