@@ -136,7 +136,7 @@ async function loadSelectedApplication(id){
         Applied: ${app.date_applied ?? ""} <br>
         Notes: ${app.notes ?? ""}`;
 
-        intervewPanel.style.display = "block";//reveal interview panel
+        interviewPanel.style.display = "block";//reveal interview panel
 
         document.getElementById("interviewStart").value = app.interview_start ? toDateTimeLocal(app.interview_start) : "";
         document.getElementById("interviewEnd").value = app.interview_end ? toDateTimeLocal(app.interview_end) : "";
@@ -147,14 +147,19 @@ async function loadSelectedApplication(id){
     }
 }
 
-scheduleInterviewBtn.addEventListener("clieck", async () => {
+scheduleInterviewBtn.addEventListener("click", async () => {
     
     console.log("Schedule Interview button clicked");
     if(!selectedApplicationId){
         interviewMsg.textContent = "Select an application first";
         return;
     }
+    await loadSelectedApplication(selectedApplicationId);
+});
+
+clearInterviewBtn.addEventListener("click", async () => {
     
+    console.log("clear interview is clicked");
     const res = await fetch(`/api/applications/${selectedApplicationId}/interview`,{
         method: "DELETE"
     });
@@ -170,7 +175,7 @@ scheduleInterviewBtn.addEventListener("clieck", async () => {
 
     await loadApplications();
     await loadSelectedApplication(selectedApplicationId);
-});
+})
 
 async function scheduleInterview(id){
     const start = document.getElementById("interviewStart").value;
@@ -189,7 +194,7 @@ async function scheduleInterview(id){
         },
         body: JSON.stringify({
             start: new Date(start).toISOString(),
-            end: new Date(end).toISOString,
+            end: new Date(end).toISOString(),
             note
         })
     });
@@ -205,6 +210,13 @@ async function scheduleInterview(id){
 
     await loadApplications();
     await loadSelectedApplication(id);
+}
+
+function toDateTimeLocal(toISOString){
+    const date = new Date(isoString);
+    const offsetMs = date.getTimezoneOffset() * 60000;
+    const localDate = new Date(date.getTime() - offsetMs);
+    return localDate.toISOString.slice(0, 16);
 }
 
 loadApplications();
