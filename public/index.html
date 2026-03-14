@@ -97,6 +97,24 @@
   <section class="panel">
     <h2>Selected Application</h2>
     <div id="selected"></div>
+
+    <div id="interviewPanel">
+      <h3>Schedule Interview</h3>
+
+      <label for="interviewStart">Interview Start</label>
+      <input type="datetime-local" id="interviewStart"/>
+
+      <label for="interviewEnd">Interview End</label>
+      <input type="datetime-local" id="interviewEnd"/>
+
+      <label for="interviewNote">Interview Notes</label>
+      <textarea id="interviewNote" rows="3" placeholder="Tech interview, HR screen, Phone Interview, etc"></textarea>
+
+      <button id="scheduleInterviewBtn" type="button">Schedule Interview</button>
+      <button id="clearInterviewBtn" type="button">Clear Interview</button>
+
+      <div id="interviewMsg" class="msg"></div>
+    </div>
   </section>
 
   <script src="./app.js"></script>

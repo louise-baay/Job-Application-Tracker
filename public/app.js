@@ -1,3 +1,5 @@
+
+
 const createForm = document.getElementById("createForm");
 const createMsg = document.getElementById("createMsg");
 const tbody = document.getElementById("appsTbody");
@@ -6,6 +8,19 @@ const searchInput = document.getElementById("search");
 const statusSelect = document.getElementById("status");
 const sortBySelect = document.getElementById("sortBy");
 const refreshBtn = document.getElementById("refreshBtn");
+
+const selectedDiv = document.getElementById("selected");
+const interviewPanel = document.getElementById("interviewPanel");
+const interviewMsg = document.getElementById("interviewMsg");
+const scheduleInterviewBtn = document.getElementById("scheduleInterviewBtn");
+const clearInterviewBtn = document.getElementById("clearInterviewBtn");
+
+console.log("scheduleInterviewBtn =", scheduleInterviewBtn);
+console.log("clearInterviewBtn =", clearInterviewBtn);
+console.log("interviewPanel =", interviewPanel);
+console.log("selectedDiv =", selectedDiv);
+
+let selectedApplicationId = null;
 
 console.log("Frontend JS loaded");//making sure that it's running
 
@@ -85,14 +100,111 @@ async function loadApplications(){
             <td>${app.current_status}</td>
             <td>${app.date_applied}</td>
             <td>${app.updated_at}</td>
-            <td><button data-id="${app.id}">View</button></td>
+            <td><button class="viewBtn" data-id="${app.id}">View</button></td>
             `;
 
             tbody.appendChild(tr);
         }
+
+        document.querySelectorAll(".viewBtn").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                await loadSelectedApplication(btn.dataset.id);
+            });
+        });
     } catch (err) {
         console.error("Failed to load applications: ", err);
     }
+}
+
+async function loadSelectedApplication(id){
+    try{
+        const res = await fetch(`/api/applications/${id}`);
+        const data = await res.json();
+
+        if(!res.ok){
+            throw new Error(data.error || "Failed to load application");
+        }
+
+        selectedApplicationId = Number(id);
+        
+        const app = data.app;
+
+        selectedDiv.innerHTML = `
+        ${app.company_name}<br>
+        Role: ${app.role_title} <br>
+        Status: ${app.current_status} <br>
+        Applied: ${app.date_applied ?? ""} <br>
+        Notes: ${app.notes ?? ""}`;
+
+        intervewPanel.style.display = "block";//reveal interview panel
+
+        document.getElementById("interviewStart").value = app.interview_start ? toDateTimeLocal(app.interview_start) : "";
+        document.getElementById("interviewEnd").value = app.interview_end ? toDateTimeLocal(app.interview_end) : "";
+        document.getElementById("interviewNote").value = "";
+    } catch (err) {
+        console.error(err);
+        selectedDiv.textContent = err.message;
+    }
+}
+
+scheduleInterviewBtn.addEventListener("clieck", async () => {
+    
+    console.log("Schedule Interview button clicked");
+    if(!selectedApplicationId){
+        interviewMsg.textContent = "Select an application first";
+        return;
+    }
+    
+    const res = await fetch(`/api/applications/${selectedApplicationId}/interview`,{
+        method: "DELETE"
+    });
+
+    const data = await res.json();
+
+    if(!res.ok){
+        interviewMsg.textContent = data.error || "Failed to clear interview";
+        return;
+    }
+
+    interviewMsg.textContent = "Interview cleared.";
+
+    await loadApplications();
+    await loadSelectedApplication(selectedApplicationId);
+});
+
+async function scheduleInterview(id){
+    const start = document.getElementById("interviewStart").value;
+    const end = document.getElementById("interviewEnd").value;
+    const note = document.getElementById("interviewNote").value;
+
+    if(!start || !end) {
+        interviewMsg.textContent = "Start and end times required";
+        return;
+    }
+
+    const res = await fetch(`/api/applications/${id}/interview`,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            start: new Date(start).toISOString(),
+            end: new Date(end).toISOString,
+            note
+        })
+    });
+
+    const data = await res.json();
+
+    if(!res.ok){
+        interviewMsg.textContent = data.error || "Failed to schedule interview";
+        return;
+    }
+
+    interviewMsg.textContent = "Interview Scheduled";
+
+    await loadApplications();
+    await loadSelectedApplication(id);
 }
 
 loadApplications();
