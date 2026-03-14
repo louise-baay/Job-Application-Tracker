@@ -3,6 +3,7 @@ import { StatusHistoryRepository } from "../repositories/StatusHistoryRepository
 import { AuditLogRepository } from "../repositories/AuditLogRepository.js";
 import { ApplicationFactory } from "../factory/ApplicationFactory.js";
 import { stateFromStatus } from "../state/state.js";
+import { buildCalendarClient } from "../services/calendar/CalendarService.js";
 
 
 /**
@@ -19,6 +20,7 @@ export class ApplicationFacade {
         this.history = new StatusHistoryRepository();
         this.audit = new AuditLogRepository();
         this.factory = new ApplicationFactory();
+        this.calendar = buildCalendarClient();
     }
     
     /**
@@ -147,6 +149,68 @@ export class ApplicationFacade {
 
         const history = await this.history.listForApplication(id);
         return { app, history };
+    }
+
+    async scheduleInterview(id, {start, end, note}) {
+        const app = await this.apps.getById(id);
+        if(!app) return null;
+
+        const details = {
+            companyName: app.company_name,
+            roleTitle: app.role_title,
+            notes: note ?? app.notes ?? "",
+            start,
+            end
+        };
+
+        let eventId = app.calendar_event_id;
+
+        if(eventId) {
+            const result = await this.calendar.updateInterviewEvent(eventId, details);
+            eventId = result.eventId ?? eventId;
+        } else {
+            const result = await this.calendar.createInterviewEvent(details);
+            eventId = result.eventId ?? null;
+        }
+
+        const updated = await this.apps.updateStatusAndInterviewFields(id, {
+            interviewStart: start,
+            interviewEnd: end,
+            calendarEventId: eventId
+        });
+
+        await this.audit.add({
+            entityType: "application",
+            entityId: id,
+            action: "SCHEDULE_INTERVIEW",
+            metadata: {start, end, calendarEventId: eventId }
+        });
+
+        return updated;
+    }
+
+    async clearInterview(id) {
+        const app = await this.apps.getById(id);
+        if (!app) return null;
+
+        if (app.calendar_event_id) {
+            await this.calendar.deleteInterviewEvent(app.calendar_event_id);
+        }
+
+        const updated = await this.apps.updateStatusAndInterviewFields(id, {
+            interviewStart: null,
+            interviewEnd: null,
+            calendarEventId: null
+        });
+
+        await this.audit.add({
+            entityType: "application",
+            entityId: id,
+            action: "CLEAR_INTERVIEW",
+            metadata: { previousEventId: app.calendar_event_id }
+        });
+
+        return updated;
     }
 }
 

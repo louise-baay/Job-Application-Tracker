@@ -89,20 +89,26 @@ applicationsRouter.post("/:id/status", async (req, res) => {
     }
 });
 
-//for adding interview later
-/*
 applicationsRouter.post("/:id/interview", async (req, res) => {
     try {
-        
+        const updated = await facade.scheduleInterview(Number(req.params.id), req.body);
+        if(!updated){
+            return res.status(404).json({error: "Not Found"});
+        }
+        res.json(updated);
     } catch (e) {
-        
+        res.status(400).json({ error: e.message });
     }
 });
 
 applicationsRouter.delete("/:id/interview", async (req, res) => {
     try {
-        
+        const updated = await facade.clearInterview(Number(req.params.id));
+        if(!updated){
+            return res.status(404).json({error: "Not Found"});
+        }
+        res.json(updated);
     } catch (e) {
-        
+        res.status(400).json({ error: e.message });
     }
-});*/
+});
