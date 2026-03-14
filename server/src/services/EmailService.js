@@ -6,25 +6,32 @@ export class EmailService {
     }
 
     async sendInterviewScheduledEmail(details){
+        console.log("Email Service called with: ", details);
         const msg = {
             to: "baaylouise@gmail.com",
             from: "baaylouise@gmail.com",
-            subject: `Interview is scheduled - ${details.company_name}`,
-            text:`Interview Scheduled for ${details.company_name}
-                Role: ${details.role_title}
-                Start: ${details.interview_start}
-                End: ${details.interview_end}
+            subject: `Interview is scheduled - ${details.companyName}`,
+            text:`Interview Scheduled for ${details.companyName}
+                Role: ${details.roleTitle}
+                Start: ${details.interviewStart}
+                End: ${details.interviewEnd}
                 Notes: ${details.notes ?? ""}`,
             html: `
                 <h2>Interview Scheduled</h2>
-                <p><Company: ${details.company_name}</p>
-                <p><Role: ${details.role_tile}</p>
-                <p><Start: ${details.interview_start}</p>
-                <p><End: ${details.interview_end}</p>
+                <p><Company: ${details.companyName}</p>
+                <p><Role: ${details.roleTile}</p>
+                <p><Start: ${details.interviewStart}</p>
+                <p><End: ${details.interviewEnd}</p>
                 <p><Notes: ${details.notes ?? ""}</p>`
         };
 
-        await sgMail.send(msg);
-        return { ok: true };
+        try{
+            const response = await sgMail.send(msg);
+            console.log("SendGrid response status: ", response[0].statusCode);
+            return {ok: true};
+        }catch (err){
+            console.error("SendGrid Error:", err.response?.body || err.message);
+            throw err;
+        }
     }
 }

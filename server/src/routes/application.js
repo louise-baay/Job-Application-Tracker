@@ -112,3 +112,20 @@ applicationsRouter.delete("/:id/interview", async (req, res) => {
         res.status(400).json({ error: e.message });
     }
 });
+
+applicationsRouter.get("/test-email", async (_req, res) => {
+    try {
+        await facade.email.sendInterviewScheduledEmail({
+            companyName: "Test Company",
+            roleTitle: "Test Role",
+            start: "2026-03-20T15:00:00Z",
+            end: "2026-03-20T16:00:00Z",
+            notes: "This is a test"
+        });
+
+        res.send("Email sent");
+    } catch (e) {
+        console.error("Test email failed:", e);
+        res.status(500).send(e.message);
+    }
+});

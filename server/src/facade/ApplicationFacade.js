@@ -168,6 +168,7 @@ export class ApplicationFacade {
             metadata: { start, end }
         });
 
+        console.log("About to send interview email... ");
         await this.email.sendInterviewScheduledEmail({
             companyName: app.company_name,
             roleTitle: app.role_title,
@@ -175,7 +176,7 @@ export class ApplicationFacade {
             start,
             end
         });
-        
+        console.log("Email interview sent");
         return updated;
     }
 
