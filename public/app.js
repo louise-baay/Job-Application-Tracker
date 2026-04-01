@@ -98,7 +98,10 @@ async function loadApplications(){
             <td>${app.current_status}</td>
             <td>${app.date_applied}</td>
             <td>${app.updated_at}</td>
-            <td><button class="viewBtn" data-id="${app.id}">View</button></td>
+            <td>
+            <button class="viewBtn" data-id="${app.id}">View</button>
+            <button class="deleteVtn" data-id="${app.id}">Delete</button>
+            </td>
             `;
 
             tbody.appendChild(tr);
@@ -109,6 +112,12 @@ async function loadApplications(){
                 await loadSelectedApplication(btn.dataset.id);
             });
         });
+        
+        document.querySelector(".deleteBtn").foreach(btn => {
+            btn.addEventListener("click", async () => {
+                await deleteApplication(btn.dataset.id);
+            })
+        })
     } catch (err) {
         console.error("Failed to load applications: ", err);
     }
@@ -142,6 +151,36 @@ async function loadSelectedApplication(id){
     } catch (err) {
         console.error(err);
         selectedDiv.textContent = err.message;
+    }
+}
+
+async function deleteApplication(id) {
+    const confirmed = confirm("Are you sure you want to delete this application?");
+
+    if(!confirmed){
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/applications/${id}` , {
+            method: "DELETE"
+        });
+
+        if(!res.ok) {
+            throw new Error(data.error || "Failed to delete application");
+        }
+
+        if(selectedApplicationId == Number(id)){
+            selectedApplicationId = null;
+            selectedDiv.innerHTML = "";
+            interviewPanel.style.display = "none";
+            interviewMsg.textContent = "";
+        }
+
+        await loadApplications();
+    } catch (err) {
+        console.error("Delete failed:", err);
+        alert(err.message);
     }
 }
 

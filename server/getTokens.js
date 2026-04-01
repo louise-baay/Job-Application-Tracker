@@ -36,3 +36,6 @@ rl.question("Enter the code from that page: ", async (code) => {
 
   rl.close();
 });
+
+//https://docs.cloud.google.com/storage/docs/oauth-scopes
+//https://docs.cloud.google.com/docs/authentication/token-types
