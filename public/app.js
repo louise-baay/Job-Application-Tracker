@@ -100,7 +100,7 @@ async function loadApplications(){
             <td>${app.updated_at}</td>
             <td>
             <button class="viewBtn" data-id="${app.id}">View</button>
-            <button class="deleteVtn" data-id="${app.id}">Delete</button>
+            <button class="deleteBtn" data-id="${app.id}">Delete</button>
             </td>
             `;
 
