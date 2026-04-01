@@ -113,11 +113,12 @@ async function loadApplications(){
             });
         });
         
-        document.querySelector(".deleteBtn").foreach(btn => {
+        document.querySelectorAll(".deleteBtn").forEach(btn => {
             btn.addEventListener("click", async () => {
                 await deleteApplication(btn.dataset.id);
-            })
-        })
+            });
+        });
+
     } catch (err) {
         console.error("Failed to load applications: ", err);
     }
@@ -165,6 +166,8 @@ async function deleteApplication(id) {
         const res = await fetch(`/api/applications/${id}` , {
             method: "DELETE"
         });
+
+        const data = await res.json();
 
         if(!res.ok) {
             throw new Error(data.error || "Failed to delete application");
@@ -252,7 +255,7 @@ function toDateTimeLocal(isoString){
     const date = new Date(isoString);
     const offsetMs = date.getTimezoneOffset() * 60000;
     const localDate = new Date(date.getTime() - offsetMs);
-    return localDate.toISOString.slice(0, 16);
+    return localDate.toISOString().slice(0, 16);
 }
 
 loadApplications();
