@@ -97,7 +97,27 @@
     <h2>Selected Application</h2>
     <div id="selected"></div>
 
-    <div id="interviewPanel">
+    <div id="statusPanel" style="display:none; margin-top: 20px;">
+      <h3>Update Status</h3>
+      <label for="nextStatus">Next Status</label>
+      <select id="nextStatus">
+        <option value="">Select a status</option>
+        <option value="Interested">Interested</option>
+        <option value="Applied">Applied</option>
+        <option value="Waiting">Waiting</option>
+        <option value="Interviewing">Interviewing</option>
+        <option value="Interviewed">Interviewed</option>
+        <option value="Offer">Offer</option>
+        <option value="Accepted">Accepted</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Withdrawn">Withdrawn</option>
+      </select>
+
+      <button id="updateStatusBtn" type="button">Update Status</button>
+      <div id="statusMsg" class="msg"></div>
+    </div>
+
+    <div id="interviewPanel" style="display:none;">
       <h3>Schedule Interview</h3>
 
       <label for="interviewStart">Interview Start</label>

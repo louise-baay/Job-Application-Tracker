@@ -14,6 +14,10 @@ const interviewMsg = document.getElementById("interviewMsg");
 const scheduleInterviewBtn = document.getElementById("scheduleInterviewBtn");
 const clearInterviewBtn = document.getElementById("clearInterviewBtn");
 
+const nextStatusSelect = document.getElementById("nextStatus");
+const updateStatusBtn = document.getElementById("updateStatusBtn");
+const statusMsg = document.getElementById("statusMsg");
+
 console.log("scheduleInterviewBtn =", scheduleInterviewBtn);
 console.log("clearInterviewBtn =", clearInterviewBtn);
 console.log("interviewPanel =", interviewPanel);
@@ -96,8 +100,8 @@ async function loadApplications(){
             <td>${app.company_name}</td>
             <td>${app.role_title}</td>
             <td>${app.current_status}</td>
-            <td>${app.date_applied}</td>
-            <td>${app.updated_at}</td>
+            <td>${app.date_applied ? app.date_applied.slice(0, 10) : ""}</td>
+            <td>${app.updated_at ? app.updated_at.slice(0, 16) : ""}</td>
             <td>
             <button class="viewBtn" data-id="${app.id}">View</button>
             <button class="deleteBtn" data-id="${app.id}">Delete</button>
@@ -144,7 +148,11 @@ async function loadSelectedApplication(id){
         <strong>Applied:</strong> ${app.date_applied ?? ""} <br>
         <strong>Notes:</strong> ${app.notes ?? ""}`;
 
+        nextStatusSelect.value = "";
+        statusMsg.textContent = "";
         interviewPanel.style.display = "block";//reveal interview panel
+        document.getElementById("statusPanel").style.display = "block";
+        
 
         document.getElementById("interviewStart").value = app.interview_start;
         document.getElementById("interviewEnd").value = app.interview_end;
@@ -153,7 +161,7 @@ async function loadSelectedApplication(id){
         console.error(err);
         selectedDiv.textContent = err.message;
     }
-}
+} 
 
 async function deleteApplication(id) {
     const confirmed = confirm("Are you sure you want to delete this application?");
@@ -215,6 +223,49 @@ clearInterviewBtn.addEventListener("click", async () => {
     await loadApplications();
     await loadSelectedApplication(selectedApplicationId);
 })
+
+updateStatusBtn.addEventListener("click", async () => {
+    if (!selectedApplicationId) {
+        statusMsg.textContent = "Select an application first.";
+        return;
+    }
+
+    const nextStatus = nextStatusSelect.value;
+
+    if (!nextStatus) {
+        statusMsg.textContent = "Select a next status.";
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/applications/${selectedApplicationId}/status`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nextStatus,
+            })
+        });
+
+        const data = await res.json();
+
+        console.log("Status update response:", data);
+
+        if (!res.ok) {
+            statusMsg.textContent = data.error || "Failed to update status.";
+            return;
+        }
+
+        statusMsg.textContent = "Status updated successfully.";
+
+        await loadApplications();
+        await loadSelectedApplication(selectedApplicationId);
+    } catch (err) {
+        console.error("Status update failed:", err);
+        statusMsg.textContent = err.message;
+    }
+});
 
 async function scheduleInterview(id){
     const start = document.getElementById("interviewStart").value;
