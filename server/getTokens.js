@@ -1,8 +1,9 @@
+import "dotenv/config";
 import { google } from "googleapis";
 import readline from "readline";
 
-const client_ID = "409445016980-hu62r4o1lhctnfgdkb5fpal5kqn90g1k.apps.googleusercontent.com";
-const client_secret = "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";
+const client_ID = process.env.GOOGLE_CLIENT_ID;
+const client_secret = process.env.GOOGLE_CLIENT_SECRET;
 
 const oauth2Client = new google.auth.OAuth2(
     client_ID,
